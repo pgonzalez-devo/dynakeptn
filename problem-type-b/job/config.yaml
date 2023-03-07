@@ -1,0 +1,14 @@
+apiVersion: v2
+actions:
+  - name: "Executing Python Script"
+    events:
+      - name: "sh.keptn.event.action.triggered"
+    tasks:
+      - name: "Using Python3"
+        files:
+          - files/jesTesting.py
+        image: "python:3.9"
+        cmd:
+          - "python"
+        args:
+          - "/keptn/files/jesTesting.py"
