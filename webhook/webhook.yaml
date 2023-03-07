@@ -1,0 +1,25 @@
+apiVersion: webhookconfig.keptn.sh/v1beta1
+kind: WebhookConfig
+metadata:
+  name: webhook-configuration
+spec:
+  webhooks:
+    - type: sh.keptn.event.action.started
+      requests:
+        - url: https://hooks.slack.com/services/{{.env.secret_slackwebhook_token}}
+          payload: >-
+            payload={   "channel" : "{{.data.project}}--{{.data.service}}",  "username" : "Keptn",   "blocks": [    {      "type" : "section",      "text" : {        "type": "mrkdwn",        "text" : "*Keptn Action Started:* [Dynatrace Problem]({{.data.labels.Problem URL}})"      }    },    {      "type" : "section",      "text" : {        "type": "mrkdwn",        "text" : "*Project:* {{.data.project}}\n*Stage:* {{.data.stage}}\n*Service:* {{.data.service}}\n*Details:* {{.env.secret_slackwebhook_bridgeUrl}}/bridge/evaluation/{{.shkeptncontext}}"      }    }  ]}
+          headers: []
+          method: POST
+      envFrom:
+        - name: secret_slackwebhook_token
+          secretRef:
+            name: slack-webhook
+            key: token
+        - name: secret_slackwebhook_bridgeUrl
+          secretRef:
+            name: slack-webhook
+            key: bridgeUrl
+      subscriptionID: ae5399f7-b381-4bf3-8711-710c480cb2a8
+      sendFinished: false
+      sendStarted: false
